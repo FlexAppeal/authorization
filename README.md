@@ -66,7 +66,7 @@ const actions = {
 
 ## Helpers:
 
-You can use the `can` helper to validate if the user is allowed to execute the action. It will return a boolean.
+You can use the `can` helper to validate if the user is allowed to execute the action. It will return a boolean.  
 `can(user, action: String, itemToValidate: Object) -> Boolean`
 
 ```
@@ -81,7 +81,7 @@ const handler = (req, reply) => {
 }
 ```
 
-This is the same as the `can` helper, but will throw an error when the result will be false.
+This is the same as the `can` helper, but will throw an error when the result will be false.  
 `check(user, action: String, itemToValidate: Object) -> Error|void`
 
 ```
