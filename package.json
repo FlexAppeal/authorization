@@ -1,0 +1,20 @@
+{
+  "name": "authorization",
+  "version": "1.0.0",
+  "description": "Options arguments ``` actions: Object role: Function|String -> String ```",
+  "main": "index.js",
+  "scripts": {
+    "test": "tape test.js | faucet"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FlexAppeal/authorization.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/FlexAppeal/authorization/issues"
+  },
+  "homepage": "https://github.com/FlexAppeal/authorization#readme"
+}
