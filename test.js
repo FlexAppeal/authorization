@@ -1,10 +1,15 @@
 const test = require('tape');
+const sinon = require('sinon');
 const authorization = require('./index');
+const checkRole = authorization.checkRole;
 const can = authorization.can;
 const check = authorization.check;
+const getUserRole = authorization.getUserRole;
+const getActionByKey = authorization.getActionByKey;
 
+const createExchangeRoles = ['employee', 'admin'];
 const actions = {
-  'create-exchange': ['employee', 'admin'],
+  'create-exchange': createExchangeRoles,
   'delete-exchange': {
     role: 'admin',
     validate: (user, exchange) => {
@@ -19,58 +24,71 @@ const teamleader = { id: 3, username: 'ruben@flex-appeal.nl', role: 'teamleader'
 const exchangeA = { id: 1, title: 'Test shift', user: { id: 1 } };
 const exchangeB = { id: 2, title: 'Test shift', user: { id: 2 } };
 
-authorization.setConfig({
-  actions,
+test('should return true when user user role is one of the required roles', t => {
+  t.true(checkRole('admin', 'admin'));
+  t.true(checkRole('employee', ['admin', 'employee']));
+  t.end();
 });
 
-test('authorize when user role is in action role array and user role is defined by key', t => {
+test('should fail when user doesn\'t have the required role', t => {
+  t.false(checkRole('employee', 'admin'));
+  t.false(checkRole('employee', ['teamleader', 'admin']));
+  t.end();
+});
+
+test('should get the valid user role from the user object', t => {
+  t.equal(getUserRole(employee, 'role'), 'employee');
+  t.equal(getUserRole(admin, user => user.role), 'admin');
+  t.end();
+});
+
+test('should return the right action when getting an action by key', t => {
   authorization.setConfig({
-    role: 'role',
+    actions,
   });
 
-  t.equal(can(admin, 'create-exchange'), true);
-  t.equal(can(teamleader, 'create-exchange'), false);
+  t.equal(getActionByKey('create-exchange'), createExchangeRoles);
   t.end();
+})
+
+test('should return true when user has the right permission for an action', t => {
+  const userRoleStub = sinon.stub(authorization, 'getUserRole').returns('admin');
+  const actionStub = sinon.stub(authorization, 'getActionByKey').returns(['employee', 'admin']);
+
+  t.true(can(admin, 'create-exchange'));
+  t.end();
+
+  userRoleStub.restore();
+  actionStub.restore();
 });
 
-test('authorize when user role is in action role array and user role is received by a function', t => {
-  authorization.setConfig({
-    role: user => user.role,
-  });
+test('should return false when user doesn\'t have the right permission for an action', t => {
+  const userRoleStub = sinon.stub(authorization, 'getUserRole').returns('employee');
+  const actionStub = sinon.stub(authorization, 'getActionByKey').returns({ role: 'admin' });
 
-  t.equal(can(admin, 'create-exchange'), true);
-  t.equal(can(teamleader, 'create-exchange'), false);
+  t.false(can(employee, 'delete-exchange'));
   t.end();
+
+  userRoleStub.restore();
+  actionStub.restore();
 });
 
-test('check if user can perform action when the validate function succeeds and the user doesn\'t have the right role', t => {
-  t.equal(can(employee, 'delete-exchange', exchangeA), true);
-  t.end();
-});
+test('should return true when user doesn\'t have the right permission for an action but the validation function returns true', t => {
+  const userRoleStub = sinon.stub(authorization, 'getUserRole').returns('employee');
+  const actionStub = sinon.stub(authorization, 'getActionByKey').returns({ role: 'admin', validate: () => true });
 
-test('should fail when the validate function fails and the user doesn\'t have the right role', t => {
-  t.equal(can(employee, 'delete-exchange', exchangeB), false);
+  t.true(can(employee, 'delete-exchange', exchangeA));
   t.end();
-});
 
-test('check if user can perform action when the validate function success and the user has the right role', t => {
-  t.equal(can(admin, 'delete-exchange', exchangeB), true);
-  t.end();
-});
-
-test('check if user can perform action when the validate function fails and the user has the right role', t => {
-  t.equal(can(admin, 'delete-exchange', exchangeA), true);
-  t.end();
-});
-
-test('should fail when user is not authorized', t => {
-  t.equal(can(teamleader, 'create-exchange'), false);
-  t.equal(can(teamleader, 'delete-exchange', exchangeB), false);
-  t.end();
+  userRoleStub.restore();
+  actionStub.restore();
 });
 
 test('should throw an error when user is not authorized', t => {
-  t.throws(() => check(teamleader, 'create-exchange'));
+  const canStub = sinon.stub(authorization, 'can').returns(false);
 
+  t.throws(() => authorization.check(teamleader, 'create-exchange'));
   t.end();
+
+  canStub.restore();
 });

@@ -1,4 +1,3 @@
-
 var actions;
 var role;
 
@@ -9,10 +8,31 @@ var role;
  * @function checkRole
  * @return {boolean} - If the user has the required role
  */
-function checkRole(userRole, required) {
+const checkRole = (userRole, required) => {
   const requiredArray = Array.isArray(required) ? required : [ required ];
 
   return requiredArray.some(role => role === userRole);
+}
+
+/**
+ * Get role from user
+ * @param {object} user - The logged user
+ * @param {string|function} role - How to retreive the role
+ * @function getUserRole
+ * @return {string} - role
+ */
+const getUserRole = (user, role) => {
+  return typeof role === 'string' ? user[role] : role(user);
+}
+
+/**
+ * Get an action by key
+ * @param {string} key - The action key
+ * @function getActionByKey
+ * @return {object|array} - The found action
+ */
+const getActionByKey = (key) => {
+  return actions[key];
 }
 
 /**
@@ -20,7 +40,7 @@ function checkRole(userRole, required) {
  * @param {object} config - The configurable values
  * @function setConfig
  */
-module.exports.setConfig = function(config) {
+const setConfig = (config) => {
   if (config.actions) actions = config.actions;
   if (config.role) role = config.role;
 }
@@ -33,16 +53,18 @@ module.exports.setConfig = function(config) {
  * @function can
  * @return {boolean} - If the user is authorized for the action
  */
-function can(user, actionKey, itemToValidate) {
-  const userRole = typeof role === 'string' ? user[role] : role(user);
-  const action = actions[actionKey];
+const can = (user, actionKey, itemToValidate) => {
+  const userRole = module.exports.getUserRole(user, role);
+  const action = module.exports.getActionByKey(actionKey);
 
-  if (Array.isArray(action) || typeof action === 'string') return checkRole(userRole, action);
-  if (typeof action === 'object') return checkRole(userRole, action.role) || action.validate(user, itemToValidate);
+  if (Array.isArray(action) || typeof action === 'string') return module.exports.checkRole(userRole, action);
+  if (typeof action === 'object') return (
+    module.exports.checkRole(userRole, action.role) ||
+    ( action.validate ? action.validate(user, itemToValidate) : false )
+  );
 
   return false;
 }
-module.exports.can = can;
 
 /**
  * Check if user is authorized for an action
@@ -53,9 +75,10 @@ module.exports.can = can;
  * @return {void} - If the user is authorized for the action
  * @throws {string} - Error message
  */
-function check(user, action, itemToValidate) {
-  if (!can(user, action, itemToValidate)) {
+const check = (user, action, itemToValidate) => {
+  if (!module.exports.can(user, action, itemToValidate)) {
     throw new Error(`You don\'t have permission for ${action}`);
   }
 }
-module.exports.check = check;
+
+module.exports = { can, check, checkRole, getUserRole, getActionByKey, setConfig };

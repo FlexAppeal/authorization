@@ -1,7 +1,7 @@
 {
   "name": "authorization",
   "version": "1.0.0",
-  "description": "Options arguments ``` actions: Object role: Function|String -> String ```",
+  "description": "",
   "main": "index.js",
   "scripts": {
     "test": "tape test.js | faucet"
@@ -16,5 +16,10 @@
   "bugs": {
     "url": "https://github.com/FlexAppeal/authorization/issues"
   },
-  "homepage": "https://github.com/FlexAppeal/authorization#readme"
+  "homepage": "https://github.com/FlexAppeal/authorization#readme",
+  "dependencies": {
+    "faucet": "0.0.1",
+    "sinon": "1.17.4",
+    "tape": "4.6.0"
+  }
 }
