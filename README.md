@@ -38,8 +38,8 @@ action: Array<String>|ActionType
 Example:
 ```
 const actions = {
-  create-exchange: ['employee', 'admin']
-  delete-exchange: {
+  'create-exchange': ['employee', 'admin']
+  'delete-exchange': {
     role: 'admin',
     validate: (user, exchange) => {
       return exchange.userId === user.id;
