@@ -21,20 +21,23 @@ const exchangeB = { id: 2, title: 'Test shift', user: { id: 2 } };
 
 authorization.setConfig({
   actions,
-  role: 'role',
 });
 
 test('authorize when user role is in action role array and user role is defined by key', t => {
+  authorization.setConfig({
+    role: 'role',
+  });
+
   t.equal(can(admin, 'create-exchange'), true);
   t.equal(can(teamleader, 'create-exchange'), false);
   t.end();
 });
 
-authorization.setConfig({
-  role: user => user.role,
-});
-
 test('authorize when user role is in action role array and user role is received by a function', t => {
+  authorization.setConfig({
+    role: user => user.role,
+  });
+
   t.equal(can(admin, 'create-exchange'), true);
   t.equal(can(teamleader, 'create-exchange'), false);
   t.end();
@@ -67,10 +70,7 @@ test('should fail when user is not authorized', t => {
 });
 
 test('should throw an error when user is not authorized', t => {
-  t.plan(1);
-  try {
-    check(teamleader, 'create-exchange');
-  } catch (err) {
-    t.equal(err, 'You don\'t have permission for create-exchange');
-  }
+  t.throws(() => check(teamleader, 'create-exchange'));
+
+  t.end();
 });

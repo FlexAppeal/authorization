@@ -55,7 +55,7 @@ module.exports.can = can;
  */
 function check(user, action, itemToValidate) {
   if (!can(user, action, itemToValidate)) {
-    throw `You don\'t have permission for ${action}`;
+    throw new Error(`You don\'t have permission for ${action}`);
   }
 }
 module.exports.check = check;
