@@ -1,6 +1,7 @@
 const test = require('tape');
 const sinon = require('sinon');
-const { checkRole, can, check, getUserRole, getActionByKey } = require('./index');
+const authorization = require('./index');
+const { checkRole, can, check, getUserRole, getActionByKey, setConfig } = require('./index');
 
 const employee = { id: 1, username: 'liam@flex-appeal.nl', role: 'employee' };
 const admin = { id: 2, username: 'guido@flex-appeal.nl', role: 'admin' };
@@ -34,7 +35,7 @@ test('should get the valid user role from the user object', t => {
 test('should return the right action when getting an action by key', t => {
   const createExchangeRoles = ['employee', 'admin'];
 
-  authorization.setConfig({
+  setConfig({
     actions: {
       'create-exchange': createExchangeRoles,
       'delete-exchange': {
