@@ -57,11 +57,14 @@ const can = (user, actionKey, itemToValidate) => {
   const userRole = module.exports.getUserRole(user, role);
   const action = module.exports.getActionByKey(actionKey);
 
-  if (Array.isArray(action) || typeof action === 'string') return module.exports.checkRole(userRole, action);
-  if (typeof action === 'object') return (
-    module.exports.checkRole(userRole, action.role) ||
-    ( action.validate ? action.validate(user, itemToValidate) : false )
-  );
+  if (Array.isArray(action) || typeof action === 'string') {
+    return module.exports.checkRole(userRole, action);
+  }
+  
+  if (typeof action === 'object') {
+    return module.exports.checkRole(userRole, action.role) || 
+      action.validate ? action.validate(user, itemToValidate) : false;
+  }
 
   return false;
 }
