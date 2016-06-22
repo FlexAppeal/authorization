@@ -22,6 +22,8 @@ const checkRole = (userRole, required) => {
  * @return {string} - role
  */
 const getUserRole = (user, role) => {
+  if (!role) throw new Error('No user role defined in config');
+
   return typeof role === 'string' ? user[role] : role(user);
 }
 
@@ -60,9 +62,9 @@ const can = (user, actionKey, itemToValidate) => {
   if (Array.isArray(action) || typeof action === 'string') {
     return module.exports.checkRole(userRole, action);
   }
-  
+
   if (typeof action === 'object') {
-    return module.exports.checkRole(userRole, action.role) || 
+    return module.exports.checkRole(userRole, action.role) ||
       action.validate ? action.validate(user, itemToValidate) : false;
   }
 

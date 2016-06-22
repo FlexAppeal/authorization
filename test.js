@@ -38,16 +38,22 @@ test('should return the right action when getting an action by key', t => {
   setConfig({
     actions: {
       'create-exchange': createExchangeRoles,
-      'delete-exchange': {
-        role: 'admin',
-        validate: (user, exchange) => exchange.user.id === user.id,
-      },
     },
   });
 
   t.equal(getActionByKey('create-exchange'), createExchangeRoles);
   t.end();
-})
+});
+
+test('should return false when action doesn\'t exist', t => {
+  setConfig({
+    actions: {},
+    role: 'role',
+  });
+
+  t.false(can(admin, 'non-existent-action'));
+  t.end();
+});
 
 test('should return true when user has the right permission for an action', t => {
   const userRoleStub = sinon.stub(authorization, 'getUserRole').returns('admin');
