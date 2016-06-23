@@ -18,7 +18,7 @@
     "type": "git",
     "url": "git+https://github.com/FlexAppeal/authorization.git"
   },
-  "keywords": ["acl", "hapi", "authorization", "permissions"],
+  "keywords": ["acl", "authorization", "permissions"],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/FlexAppeal/authorization/issues"
