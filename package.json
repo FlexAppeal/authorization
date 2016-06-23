@@ -12,7 +12,7 @@
   }],
   "main": "src/index.js",
   "scripts": {
-    "test": "tape test.js | faucet"
+    "test": "tape src/test.js | faucet"
   },
   "repository": {
     "type": "git",
