@@ -64,8 +64,13 @@ const can = (user, actionKey, itemToValidate) => {
   }
 
   if (typeof action === 'object') {
-    return module.exports.checkRole(userRole, action.role) ||
-      action.validate ? action.validate(user, itemToValidate) : false;
+    const hasRole = action.role ? module.exports.checkRole(userRole, action.role) : true;
+
+    if (action.and) return hasRole && action.and(user, itemToValidate);
+    if (action.or) return hasRole || action.or(user, itemToValidate);
+    if (action.validate && !action.role) return action.validate(user, itemToValidate);
+
+    return hasRole;
   }
 
   return false;
@@ -80,9 +85,9 @@ const can = (user, actionKey, itemToValidate) => {
  * @return {void} - If the user is authorized for the action
  * @throws {string} - Error message
  */
-const check = (user, action, itemToValidate) => {
+const check = (user, action, itemToValidate, errMessage) => {
   if (!module.exports.can(user, action, itemToValidate)) {
-    throw new Error(`You don\'t have permission for ${action}`);
+    throw new Error(errMessage || `You don\'t have permission for ${action}`);
   }
 }
 
