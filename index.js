@@ -65,12 +65,13 @@ const can = (user, actionKey, itemToValidate) => {
 
   if (typeof action === 'object') {
     const hasRole = action.role ? module.exports.checkRole(userRole, action.role) : true;
+    let canPerformAction = hasRole;
 
-    if (action.and) return hasRole && action.and(user, itemToValidate);
-    if (action.or) return hasRole || action.or(user, itemToValidate);
-    if (action.validate && !action.role) return action.validate(user, itemToValidate);
+    if (action.and) canPerformAction = canPerformAction && action.and(user, itemToValidate);
+    if (action.or) canPerformAction = canPerformAction || action.or(user, itemToValidate);
+    if (action.validate && !action.role) canPerformAction = action.validate(user, itemToValidate);
 
-    return hasRole;
+    return canPerformAction;
   }
 
   return false;
