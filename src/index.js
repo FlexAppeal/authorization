@@ -64,7 +64,6 @@ const can = (user, actionKey, itemToValidate) => {
   }
 
   if (typeof action === 'object') {
-<<<<<<< HEAD
     const hasRole = action.role ? module.exports.checkRole(userRole, action.role) : true;
     let canPerformAction = hasRole;
 
@@ -73,10 +72,6 @@ const can = (user, actionKey, itemToValidate) => {
     if (action.validate && !action.role) canPerformAction = action.validate(user, itemToValidate);
 
     return canPerformAction;
-=======
-    return module.exports.checkRole(userRole, action.role) ||
-      action.validate ? action.validate(user, itemToValidate) : false;
->>>>>>> master
   }
 
   return false;
