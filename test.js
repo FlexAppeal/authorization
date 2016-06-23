@@ -77,12 +77,24 @@ test('should return false when user doesn\'t have the right permission for an ac
   actionStub.restore();
 });
 
-test('should return true when user doesn\'t have the right permission for an action but the validation function returns true', t => {
+test('should return true when user doesn\'t have the right permission for an action but the "or" function returns true', t => {
   const userRoleStub = sinon.stub(authorization, 'getUserRole').returns('employee');
-  const actionStub = sinon.stub(authorization, 'getActionByKey').returns({ role: 'admin', validate: () => true });
+  const actionStub = sinon.stub(authorization, 'getActionByKey').returns({ role: 'admin', or: () => true });
   const exchange = { id: 1, title: 'Test shift', user: { id: 1 } };
 
   t.true(can(employee, 'delete-exchange', exchange));
+  t.end();
+
+  userRoleStub.restore();
+  actionStub.restore();
+});
+
+test('should return true when user doesn\'t have the right permission for an action but the "and" function returns true', t => {
+  const userRoleStub = sinon.stub(authorization, 'getUserRole').returns('employee');
+  const actionStub = sinon.stub(authorization, 'getActionByKey').returns({ role: 'admin', and: () => true });
+  const exchange = { id: 1, title: 'Test shift', user: { id: 1 } };
+
+  t.false(can(employee, 'delete-exchange', exchange));
   t.end();
 
   userRoleStub.restore();
