@@ -1,8 +1,16 @@
 {
-  "name": "authorization",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "name": "flexappeal-acl",
+  "version": "0.0.1",
+  "description": "Simple ACL implementation that we use at Flex-Appeal.",
+  "author": "Flex-Appeal Developers <dev@flex-appeal.nl> (https://github.com/FlexAppeal)",
+  "contributors": [{
+    "name": "Guido Schmitz",
+    "email": "guido@flex-appeal.nl"
+  }, {
+    "name": "Liam Hubers",
+    "email": "liam@flex-appeal.nl"
+  }],
+  "main": "src/index.js",
   "scripts": {
     "test": "tape test.js | faucet"
   },
@@ -10,14 +18,13 @@
     "type": "git",
     "url": "git+https://github.com/FlexAppeal/authorization.git"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": ["acl", "authorization", "permissions"],
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/FlexAppeal/authorization/issues"
   },
   "homepage": "https://github.com/FlexAppeal/authorization#readme",
-  "dependencies": {
+  "devDependencies": {
     "faucet": "0.0.1",
     "sinon": "1.17.4",
     "tape": "4.6.0"
