@@ -13,7 +13,7 @@
   "main": "dist/index.js",
   "scripts": {
     "test": "tape src/test.js | faucet",
-    "clean": "rm -rf dist/",
+    "clean": "rm -rf dist/ && mkdir dist/",
     "compile": "npm run clean && babel src/index.js -o dist/index.js",
     "prepublish": "npm run test && npm run compile"
   },
