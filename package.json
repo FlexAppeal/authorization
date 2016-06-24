@@ -17,6 +17,7 @@
     "compile": "npm run clean && babel src/index.js -o dist/index.js",
     "prepublish": "npm run test && npm run compile"
   },
+  "files": ["src/", "dist/"],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/FlexAppeal/authorization.git"
